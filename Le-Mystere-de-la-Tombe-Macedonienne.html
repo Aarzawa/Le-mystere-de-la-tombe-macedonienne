@@ -9,7 +9,7 @@
 </head>
 <body>
 <tw-story><noscript><tw-noscript>JavaScript needs to be enabled to play Le Mystère de la Tombe Macédonienne.</tw-noscript></noscript></tw-story>
-<tw-storydata name="Le Mystère de la Tombe Macédonienne" startnode="46" creator="Twine" creator-version="2.7.1" format="Harlowe" format-version="3.3.7" ifid="E1F9896D-52A8-4EA4-8EC8-7497A6E0A316" options="" tags="" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">/* Overrider some Harlowe defaults. */
+<tw-storydata name="Le Mystère de la Tombe Macédonienne" startnode="46" creator="Twine" creator-version="2.7.1" format="Harlowe" format-version="3.3.7" ifid="E1F9896D-52A8-4EA4-8EC8-7497A6E0A316" options="" tags="" zoom="0.3" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">/* Overrider some Harlowe defaults. */
 html {
 	background: white;
 	color: white;
@@ -38,8 +38,16 @@ tw-passage {
    	background: #ECE5D5;
   	color: #0E1C36;
 }
+tw-passage[data-passage="lose"]::before {
+    content: "Vous avez perdu. Le temps est écoulé.";
+    display: block;
+}
+tw-passage[data-passage="lose"] {
+    display: none;
+}
 tw-sidebar {
 	left: -3em;
+  	display: none;
 }
 /* Pour les passages avec le tag jour */
 [tags="jour"] tw-link {
@@ -98,7 +106,7 @@ tw-hook[name="separator"] {
 
 [[...-&gt;Jeudi 15h02]]
 
-(set: $time to 30)
+
 (track: &#39;dig&#39;, &#39;loop&#39;, true)
 (track: &#39;dig&#39;, &#39;volume&#39;, 0.3)
 (track: &#39;dig&#39;, &#39;fadein&#39;, 4)
@@ -159,7 +167,7 @@ Il n’est pas question de laisser Manolis lui faire croire qu’il s’agit de 
 [[...-&gt;Vendredi 22h19]]
 ]
 
-(set: $time to 30)
+
 (track: &#39;notif&#39;, &#39;play&#39;)
 
 </tw-passagedata><tw-passagedata pid="13" name="Vendredi 22h19" tags="" position="1475,1900" size="100,100">&#39;&#39;Vendredi 22h19.&#39;&#39; Vous voici devant le musée. Quelques lumières allumées vous indiquent la présence de restaurateurs, probablement occupés avec les découvertes de la journée. Vous entrez. Dans quelle direction aller ?
@@ -167,8 +175,7 @@ Il n’est pas question de laisser Manolis lui faire croire qu’il s’agit de 
 [[La porte entrouverte d&#39;où s&#39;échappe un son de radio et une vive lumière-&gt;restaurateur]]
 [[Le couloir sombre au fond duquel se trouve le dépôt-&gt;depot-clos]]
 
-(set:$key to false)
-(set: $typologie to false)</tw-passagedata><tw-passagedata pid="14" name="restaurateur" tags="nuit" position="1075,1900" size="100,100">Vous tombez nez à nez avec Alexia, une des restauratrices du musée. Elle vous regarde l&#39;air étonné.
+</tw-passagedata><tw-passagedata pid="14" name="restaurateur" tags="nuit" position="1075,1900" size="100,100">Vous tombez nez à nez avec Alexia, une des restauratrices du musée. Elle vous regarde l&#39;air étonné.
 
 -    Qu&#39;est-ce que tu fous là ?
 -   J&#39;aimerais vérifier quelque chose parmi les objets qu&#39;on a sortis aujourd&#39;hui. Le dépôt est ouvert ?
@@ -180,9 +187,9 @@ Vous froncez les sourcils, perplexe.
 -    L&#39;année de la mort d&#39;Alexandre évidemment ! Bon, je dois y aller, on se voit lundi ! Ah, et n&#39;oublie pas, l&#39;alarme automatique s&#39;active à 23h. Ne traîne pas sinon la police débarquera, et ils détestent ces fausses alertes... Salut !
 
 Alexia s&#39;éloigne rapidement. 
-L&#39;alarme... Vous aviez complètement oublié ce paramètre. Et Pas question de la faire sonner. Les frais engendrés sont trop importants ! La mission ne peut pas se permettre de débourser une somme pareille...
+L&#39;alarme... Vous aviez complètement oublié ce paramètre. Et pas question de la faire sonner. Les frais engendrés sont trop importants ! La mission ne peut pas se permettre de débourser une somme pareille...
 Il est 22h30, vous avez 30 minutes.
-(set:$time to 30)
+
 
 [[Se diriger vers l&#39;escalier-&gt;coffre]]</tw-passagedata><tw-passagedata pid="15" name="coffre" tags="nuit" position="1075,2025" size="100,100">Devant vous, le coffre fermé et son mystérieux code à 3 chiffres :
 
@@ -251,13 +258,21 @@ Maintenant, où cherchez-vous ?
 
 
 (set: $time to it - 4)
-</tw-passagedata><tw-passagedata pid="25" name="header" tags="header" position="1100,1300" size="100,100">(if:(history: where its name contains &quot;Vendredi 22h19&quot;)&#39;s length &gt;= 1)[(if: $time &lt;= 0)[(redirect: &quot;lose&quot;)]]
- 
-(if:(history: where its name contains &quot;restaurateur&quot;)&#39;s length &gt;= 1)[&#39;&#39;22h(print: 60 - $time)&#39;&#39;.]
+</tw-passagedata><tw-passagedata pid="25" name="header" tags="header" position="800,1300" size="100,100">(set: $currentPassageName to (passage:)&#39;s name)
+(if: $time &lt;= 0 and not $isLoseChecked)[
+    (set: $isLoseChecked to true)
+    (goto: &quot;lose&quot;)
+]
+(if: $time &lt;= 0)[
+    (replace: &quot;#passage-&quot; + $currentPassageName)[]
+]
 
-</tw-passagedata><tw-passagedata pid="26" name="lose" tags="" position="1300,1300" size="100,100">&quot;Un vacarme soudain. L&#39;alarme sonne. Et vous n&#39;avez pas la preuve que la tombe n&#39;est pas celle d&#39;Alexandre. Votre aventure s&#39;arrête ici...&quot;
+(if:$currentPassageName is not &quot;lose&quot;)[(if:(history: where its name contains &quot;restaurateur&quot;)&#39;s length &gt;= 1)[&#39;&#39;22h(print: 60 - $time)&#39;&#39;.]]
 
-salut</tw-passagedata><tw-passagedata pid="27" name=" étagère" tags="" position="1375,2925" size="100,100">Un coup d&#39;oeil rapide vous permet de vous repérer dans la bibliothèque. Dans le rayon du bas, les livres consacrés aux monnaies. Au-dessus, les livres consacrés à la céramique.
+</tw-passagedata><tw-passagedata pid="26" name="lose" tags="" position="800,1500" size="100,100">(enchant:?passage,(bg:#b80505))&#39;&#39;23h.&#39;&#39; Un vacarme soudain. L&#39;alarme sonne. Et vous n&#39;avez pas la preuve que la tombe n&#39;est pas celle d&#39;Alexandre. Votre aventure s&#39;arrête ici...
+
+(track: &#39;alarm&#39;, &#39;volume&#39;, 0.5)
+(track: &#39;alarm&#39;, &#39;play&#39;)</tw-passagedata><tw-passagedata pid="27" name=" étagère" tags="" position="1375,2925" size="100,100">Un coup d&#39;oeil rapide vous permet de vous repérer dans la bibliothèque. Dans le rayon du bas, les livres consacrés aux monnaies. Au-dessus, les livres consacrés à la céramique.
 
 (if:(history: where its name contains &quot;livre numi&quot;)&#39;s length &lt; 1)[[[Chercher parmi les livres de numismatique-&gt;biblio numi]]]
 (if:(history: where its name contains &quot;biblio céram&quot;)&#39;s length &lt; 1)[[[Chercher parmi les livres de céramologie-&gt;biblio céram]]]
@@ -294,7 +309,12 @@ Vous ne trouvez pas votre bonheur, mais êtes intrigué.
 </tw-passagedata><tw-passagedata pid="31" name="livre numi" tags="" position="950,3225" size="100,100">Vous prenez //La mémoire numismatique de l&#39;empire romain// et le feuilletez. À la première page est inscrit le nom d&#39;André.
 Vous vous rappelez alors que ce jeune archéologue et historien est en train d&#39;écrire sa thèse sur la numismatique romaine ! Il doit s&#39;agir de son coin de la bibliothèque...
 
-(set: $time to it - 3)</tw-passagedata><tw-passagedata pid="32" name="dépot 2" tags="" position="2100,2500" size="100,100">Il ne vous reste que (print: $time) minutes avant 23h....
+(set: $time to it - 3)
+
+[[Jeter un oeil aux livres de céramologie-&gt;biblio céram]] 
+[[Préférer regarder sur la table finalement-&gt;table]]
+[[Aller voir dans l&#39;arrière salle-&gt;arrière salle]] 
+</tw-passagedata><tw-passagedata pid="32" name="dépot 2" tags="" position="2100,2500" size="100,100">Il ne vous reste que (print: $time) minutes avant 23h....
 Arriverez-vous à trouver dans les temps le tesson de céramique clé qui vous permettra de prouver que la date de la tombe ne correspond à celle de la mort d&#39;Alexandre ?
 
 [[Se diriger vers la céramique-&gt;céramique 2]]
@@ -369,24 +389,27 @@ Vous décidez de ne pas perdre plus de temps avec cette amphore et de [[poursuiv
 
 [[Chercher-&gt;bords1.2]]
 
-(set: $time to it -6)
+(set: $time to it -3)
 </tw-passagedata><tw-passagedata pid="43" name="bords1.2" tags="" position="3100,2600" size="100,100">Après quelques minutes, un tesson attire votre oeil...
 Fébrile, vous ouvrez votre typologie. Pas de doute, il ne ressemble à rien de ce que vous pouvez trouver dans le livre.
 Il ressemble étrangement à la céramique d&#39;époque romaine que vous vous rappelez avoir vu il y a quelques mois sur le site de Philippes...
 
 [[Fouiller dans le reste des tessons pour voir s&#39;il y en a d&#39;autres semblables-&gt;réflexion]]
 
-(set: $time to it - 2)</tw-passagedata><tw-passagedata pid="44" name="réflexion" tags="" position="3250,2700" size="100,100">Après quelques minutes de recherche, vous rassemblez une dizaine de tessons similiaires à de la céramique romaine. Vos mains tremblent légèrement. Pas de doute possible, ces tessons sont bien postérieurs à l&#39;époque hellénistique !
-Vous avez la preuve dont vous aviez désespérément besoin. Vous savez maintenant que vous allez pouvoir empêcher une grave erreur !
-</tw-passagedata><tw-passagedata pid="45" name="hal.tracks" tags="" position="950,1375" size="100,100">notif: &quot;.\bruitages\bruitageNotif.mp3&quot;
+(set: $time to it - 2)</tw-passagedata><tw-passagedata pid="44" name="réflexion" tags="" position="3400,2775" size="100,100">Après quelques minutes de recherche, vous rassemblez une dizaine de tessons similiaires à de la céramique romaine. Vos mains tremblent légèrement. Pas de doute possible, ces tessons sont bien postérieurs à l&#39;époque hellénistique !
+Vous avez la preuve dont vous aviez désespérément besoin. Vous savez maintenant que vous allez pouvoir empêcher une grave erreur !</tw-passagedata><tw-passagedata pid="45" name="hal.tracks" tags="" position="950,1300" size="100,100">notif: &quot;.\bruitages\bruitageNotif.mp3&quot;
 locked: &quot;.\bruitages\tryingToOpenDoor.mp3&quot;
 unlock:&quot;.\bruitages\ouvrir-avec-clef.mp3&quot;
 neon: &quot;.\bruitages\sf-neon.mp3&quot;
 dig: &quot;.\bruitages\digging.wav&quot;
-photo: &quot;.\bruitages\photo.wav&quot;</tw-passagedata><tw-passagedata pid="46" name="Start" tags="jour" position="250,775" size="100,100">(align:&quot;=&gt;&lt;=&quot;)+(box:&quot;X=&quot;)[
+photo: &quot;.\bruitages\photo.wav&quot;
+alarm: &quot;.\bruitages\alarme.mp3&quot;</tw-passagedata><tw-passagedata pid="46" name="Start" tags="jour" position="250,775" size="100,100">(align:&quot;=&gt;&lt;=&quot;)+(box:&quot;X=&quot;)[
 [[Démarrer-&gt;Jeudi 12h23]]
 ]
-</tw-passagedata></tw-storydata>
+</tw-passagedata><tw-passagedata pid="47" name="startup" tags="startup" position="950,1500" size="100,100">(set: $isLoseChecked to false)
+(set: $time to 30)
+(set:$key to false)
+(set: $typologie to false)</tw-passagedata></tw-storydata>
 <script title="Twine engine code" data-main="harlowe">(function(){"use strict";
 var require,define;!function(){var e={},r={};require=function(i){var n=e[i];return n&&(r[i]=n[1].apply(void 0,n[0].map(require)),e[i]=void 0),r[i]},(define=function(r,i,n){if("function"==typeof r)return r();e[r]=[i,n]}).amd=!0}();/*!
  * https://github.com/paulmillr/es6-shim
