@@ -9,6 +9,9 @@ Cette fiction propose d'entrer dans la peau d'un archéologue au moment de la d�
 
 ![capture d'écran de la fiction](screenshot.png)
 
+## Lancement
+
+Lancer le fichier Le-Mystere-de-la-Tombe-Macedonienne.html.
 ## Technologie
 
 La fiction a été développée à l'aide de l'outil Twine.
